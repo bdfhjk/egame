@@ -5,10 +5,19 @@ game.PlayScreen = me.ScreenObject.extend({
     onResetEvent: function() {
         // reset the score
         game.data.score = 0;
-
+		
+		// load a level
+		me.levelDirector.loadLevel("standard");
+		
+		
+		
         // add our HUD to the game world
         this.HUD = new game.HUD.Container();
         me.game.world.addChild(this.HUD);
+		
+		var mainObject = me.pool.pull('mainPlayer', 100, 100);
+		
+		me.game.world.addChild(mainObject);
     },
 
     /**
