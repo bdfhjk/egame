@@ -4,9 +4,15 @@ from django.template import RequestContext, loader
 from django.templatetags.static import static
 from core.models import Building, BuildingState
 from django.forms.models import model_to_dict
+from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+@login_required(login_url='login')
 def index(request):
+
+    if 'logout' in request.GET:
+        logout(request)
+        return index(request)
     template = loader.get_template('core/index.html')
     return HttpResponse(template.render())
 
@@ -45,3 +51,20 @@ def buildings(request):
 def citizens(request):
     template = loader.get_template('core/citizens.html')
     return HttpResponse(template.render())
+
+def login(request):
+    context = RequestContext(request, {})
+    template = loader.get_template('core/login.html')
+
+    if 'username' in request.POST:
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None:
+            auth_login(request, user)
+            return index(request)
+        else:
+            return HttpResponse(template.render(context))
+    else: 
+        return HttpResponse(template.render(context))
