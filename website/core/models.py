@@ -16,14 +16,14 @@ class Building(models.Model):
     name = models.CharField(max_length=200)
     icon = models.CharField(max_length=200)
     desc = models.CharField(max_length=200)
-    resource = models.ForeginKey(Resource, null=True)
-    production = models.IntegerField(null=True)
+    resource = models.ForeignKey(Resource, null=True, blank=True)
+    production = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
 
 class BuildingState(models.Model):
-    user = models.ForeginKey(User, unique=True)
+    user = models.ForeignKey(User)
     building = models.ForeignKey(Building)
     level = models.CharField(max_length=200)
 
@@ -31,7 +31,7 @@ class BuildingState(models.Model):
         return str(self.building)
 
 class BuildingResourceLevel(models.Model):  #How much what resource on each level
-    building = models.ForeginKey(Building)
+    building = models.ForeignKey(Building)
     level = models.IntegerField()
     production = models.IntegerField(null=True)
 
@@ -47,20 +47,20 @@ class Education(models.Model):
     def __str__(self):
         return self.name
 
-class JobState(models.Model):
-    citizen = models.ForeginKey(Citizen, unique=True)
-    building = models.ForeginKey(Building)
-
-    def __str__(self):
-        return str(self.citizen) + " - " + str(self.building)
-
 class Citizen(models.Model):
-    user = models.ForeginKey(User, unique=True)
-    education = models.ForeginKey(Education)
+    user = models.ForeignKey(User, unique=True)
+    education = models.ForeignKey(Education)
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
+
+class JobState(models.Model):
+    citizen = models.ForeignKey(Citizen, unique=True)
+    building = models.ForeignKey(Building)
+
+    def __str__(self):
+        return str(self.citizen) + " - " + str(self.building)
 
     
     

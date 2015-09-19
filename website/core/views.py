@@ -37,7 +37,7 @@ def buildings(request):
         row.append(building)
         if count == 3:
             count = 0
-            buildings_rows.append(row)
+            building_rows.append(row)
             row = []
 
     if (row != []):
